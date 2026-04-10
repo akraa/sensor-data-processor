@@ -34,19 +34,20 @@ public class SensorDataProcessor{
         final int rows = data.length;
         final int cols = data[0].length;
         final int depth = data[0][0].length;
-        final double[][][] data2 = new double[rows][cols][depth];
         final double invD = 1.0 / d;
 
         // Write racing stats data into a file
         try (BufferedWriter out = new BufferedWriter(new FileWriter("RacingStatsData.txt"))) {
 
             for (int i = 0; i < rows; i++) {
+                final StringBuilder rowOutput = new StringBuilder(cols * depth * 8);
+
                 for (int j = 0; j < cols; j++) {
                     final double[] sourceRow = data[i][j];
-                    final double[] targetRow = data2[i][j];
                     final double limitSq = limit[i][j] * limit[i][j];
                     final double sourceAverage = average(sourceRow);
-                    final boolean positiveIndexProduct = (i + 1) * (j + 1) > 0;
+                    final double[] targetRow = new double[depth];
+                    final double invDepth = 1.0 / depth;
 
                     double rowSum = 0.0;
 
@@ -56,33 +57,32 @@ public class SensorDataProcessor{
                         targetRow[k] = transformed;
                         rowSum += transformed;
 
-                        final double transformedAverage = rowSum / depth;
+                        final double transformedAverage = rowSum * invDepth;
 
                         if (transformedAverage > 10.0 && transformedAverage < 50.0) {
                             break;
                         } else if (transformed > sourceValue) {
                             break;
                         } else {
-                            final double sourceAbs = Math.abs(sourceValue);
-                            final double transformedAbs = Math.abs(transformed);
-                            final double sourceCube = sourceAbs * sourceAbs * sourceAbs;
-                            final double transformedCube = transformedAbs * transformedAbs * transformedAbs;
-
-                            if (sourceCube < transformedCube
-                                    && sourceAverage < transformed
-                                    && positiveIndexProduct) {
+                            if (Math.abs(sourceValue) < Math.abs(transformed)
+                                    && sourceAverage < transformed) {
                                 targetRow[k] = transformed * 2.0;
                                 rowSum += transformed;
                             }
                         }
                     }
-                }
-            }
 
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    out.write(data2[i][j] + "\t");
+                    rowOutput.append('[');
+                    for (int k = 0; k < depth; k++) {
+                        if (k > 0) {
+                            rowOutput.append(',').append(' ');
+                        }
+                        rowOutput.append(targetRow[k]);
+                    }
+                    rowOutput.append(']').append('\t');
                 }
+
+                out.write(rowOutput.toString());
             }
 
             long endTime = System.nanoTime();

@@ -133,57 +133,25 @@ public class SensorDataProcessorTest {
 
     @Test
     @DisplayName("Test 5: Third condition TRUE - all three sub-conditions meet, executes data2 *= 2")
-    public void testThirdIfConditionTrue() {
-        // To trigger: Math.pow(Math.abs(data[i][j][k]), 3) < Math.pow(Math.abs(data2[i][j][k]), 3)
-        //            AND average(data2[i][j]) < data2[i][j][k]
-        //            AND (i + 1) * (j + 1) > 0
+    public void testThirdIfConditionTrue() throws Exception {
+        double[][][] data = new double[1][1][3];
+        double[][] limits = new double[1][1];
 
-        double[][][] data = new double[2][2][3];
-        double[][] limits = new double[2][2];
-
-        // Set carefully chosen values
-        data[0][0][0] = 5.0;
-        data[0][0][1] = 6.0;
-        data[0][0][2] = 4.0;
-        limits[0][0] = 0.01; // limit^2 = 0.0001
-
-        // With divisor 0.1: data2[0][0][k] = data[0][0][k] / 0.1 - 0.0001
-        // data2[0][0] = [50-0.0001=49.9999, 60-0.0001=59.9999, 40-0.0001=39.9999]
-        // average(data2[0][0]) = ~50
-        // data[0][0][0] = 5, data2[0][0][0] = 49.9999
-        // |5|^3 = 125, |49.9999|^3 ≈ 124999 -> 125 < 124999? YES
-        // 50 < 49.9999? NO
-
-        // Adjust to make average < data2[i][j][k]
-        data[0][0][0] = 2.0;
-        data[0][0][1] = 2.0;
-        data[0][0][2] = 2.0;
-        limits[0][0] = 0.01;
-
-        // With divisor 0.1: data2[0][0][k] = 2/0.1 - 0.0001 = 19.9999
-        // average(data2[0][0]) = 19.9999
-        // data[0][0][0] = 2, data2[0][0][0] = 19.9999
-        // |2|^3 = 8, |19.9999|^3 ≈ 7.99e6 -> 8 < 7.99e6? YES
-        // 19.9999 < 19.9999? NO
-
-        // Need average < specific element
-        data[0][0][0] = 2.0;
-        data[0][0][1] = 2.0;
-        data[0][0][2] = 100.0; // This will make average higher
-        limits[0][0] = 0.01;
-
-        // With divisor 0.1: data2[0][0] = [19.9999, 19.9999, 999.9999]
-        // average(data2[0][0]) = (19.9999 + 19.9999 + 999.9999) / 3 ≈ 347
-        // data2[0][0][2] = 999.9999
-        // average(data2[0][0]) < data2[0][0][2]? 347 < 999.9999? YES
-        // |100|^3 < |999.9999|^3? YES
-        // (0+1)*(0+1) > 0? YES
+        // k=0 path:
+        // transformed = -5.01, sourceAverage = -135.0
+        // first if false, second if false, third if true => value doubled to -10.02
+        data[0][0][0] = -5.0;
+        data[0][0][1] = -200.0;
+        data[0][0][2] = -200.0;
+        limits[0][0] = 0.1;
 
         processor = new SensorDataProcessor(data, limits);
-        processor.calculate(0.1);
+        processor.calculate(1.0);
 
         File file = new File(OUTPUT_FILE);
         assertTrue(file.exists(), "Output file should be created");
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.contains("-10.02"), "Output should include doubled transformed value");
     }
 
     @Test
@@ -378,5 +346,20 @@ public class SensorDataProcessorTest {
 
         File file = new File(OUTPUT_FILE);
         assertTrue(file.exists(), "Output file should be created");
+    }
+
+    @Test
+    @DisplayName("Test 16: Covers calculate catch block when output path is not writable as a file")
+    public void testCalculateCatchBlock() {
+        File outputPath = new File(OUTPUT_FILE);
+        assertTrue(outputPath.mkdir(), "Directory setup should succeed");
+
+        double[][][] data = new double[1][1][1];
+        double[][] limits = new double[1][1];
+        data[0][0][0] = 1.0;
+        limits[0][0] = 1.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        assertDoesNotThrow(() -> processor.calculate(1.0));
     }
 }

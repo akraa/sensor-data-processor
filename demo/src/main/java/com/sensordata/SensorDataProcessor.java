@@ -31,40 +31,59 @@ public class SensorDataProcessor{
 
         long startTime = System.nanoTime();
 
-        int i, j, k = 0;
-        double[][][] data2 = new double[data.length][data[0].length][data[0][0].length];
-
-        BufferedWriter out;
+        final int rows = data.length;
+        final int cols = data[0].length;
+        final int depth = data[0][0].length;
+        final double[][][] data2 = new double[rows][cols][depth];
+        final double invD = 1.0 / d;
 
         // Write racing stats data into a file
-        try {
-            out = new BufferedWriter(new FileWriter("RacingStatsData.txt"));
+        try (BufferedWriter out = new BufferedWriter(new FileWriter("RacingStatsData.txt"))) {
 
-            for (i = 0; i < data.length; i++) {
-                for (j = 0; j < data[0].length; j++) {
-                    for (k = 0; k < data[0][0].length; k++) {
-                        data2[i][j][k] = data[i][j][k] / d - Math.pow(limit[i][j], 2.0);
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    final double[] sourceRow = data[i][j];
+                    final double[] targetRow = data2[i][j];
+                    final double limitSq = limit[i][j] * limit[i][j];
+                    final double sourceAverage = average(sourceRow);
+                    final boolean positiveIndexProduct = (i + 1) * (j + 1) > 0;
 
-                        if (average(data2[i][j]) > 10 && average(data2[i][j]) < 50)
+                    double rowSum = 0.0;
+
+                    for (int k = 0; k < depth; k++) {
+                        final double sourceValue = sourceRow[k];
+                        final double transformed = sourceValue * invD - limitSq;
+                        targetRow[k] = transformed;
+                        rowSum += transformed;
+
+                        final double transformedAverage = rowSum / depth;
+
+                        if (transformedAverage > 10.0 && transformedAverage < 50.0) {
                             break;
-                        else if (Math.max(data[i][j][k], data2[i][j][k]) > data[i][j][k])
+                        } else if (transformed > sourceValue) {
                             break;
-                        else if (Math.pow(Math.abs(data[i][j][k]), 3) < Math.pow(Math.abs(data2[i][j][k]), 3)
-                                && average(data[i][j]) < data2[i][j][k] && (i + 1) * (j + 1) > 0)
-                            data2[i][j][k] *= 2;
-                        else
-                            continue;
+                        } else {
+                            final double sourceAbs = Math.abs(sourceValue);
+                            final double transformedAbs = Math.abs(transformed);
+                            final double sourceCube = sourceAbs * sourceAbs * sourceAbs;
+                            final double transformedCube = transformedAbs * transformedAbs * transformedAbs;
+
+                            if (sourceCube < transformedCube
+                                    && sourceAverage < transformed
+                                    && positiveIndexProduct) {
+                                targetRow[k] = transformed * 2.0;
+                                rowSum += transformed;
+                            }
+                        }
                     }
                 }
             }
 
-            for (i = 0; i < data2.length; i++) {
-                for (j = 0; j < data2[0].length; j++) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
                     out.write(data2[i][j] + "\t");
                 }
             }
-
-            out.close();
 
             long endTime = System.nanoTime();
             long elapsedMs = (endTime - startTime) / 1_000_000;

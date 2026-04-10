@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sensordata.SensorDataProcessorTest" time="0.176" tests="17" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sensordata.SensorDataProcessorTest" time="0.247" tests="20" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="session.topDirectory" value="/workspaces/sensor-data-processor/demo"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/workspaces/sensor-data-processor/demo/target/surefire/surefirebooter15414828770657301430.jar /workspaces/sensor-data-processor/demo/target/surefire 2026-04-10T22-19-35_790-jvmRun1 surefire15252980288869117487tmp surefire_01315020990564612045tmp"/>
+    <property name="sun.java.command" value="/workspaces/sensor-data-processor/demo/target/surefire/surefirebooter13727021966978715191.jar /workspaces/sensor-data-processor/demo/target/surefire 2026-04-10T22-28-49_770-jvmRun1 surefire6169632749963801189tmp surefire_010704459320771900889tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/workspaces/sensor-data-processor/demo/target/test-classes:/workspaces/sensor-data-processor/demo/target/classes:/home/codespace/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/home/codespace/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/codespace/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/home/codespace/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/codespace/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/home/codespace/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="/workspaces/sensor-data-processor/demo/target/surefire/surefirebooter15414828770657301430.jar"/>
+    <property name="surefire.real.class.path" value="/workspaces/sensor-data-processor/demo/target/surefire/surefirebooter13727021966978715191.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.18+8-Ubuntu-124.04.1"/>
     <property name="user.name" value="codespace"/>
@@ -52,21 +52,24 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testMaxConditionSmallData2" classname="com.sensordata.SensorDataProcessorTest" time="0.059"/>
-  <testcase name="testCatchBlockCoverage" classname="com.sensordata.SensorDataProcessorTest" time="0.014"/>
-  <testcase name="testThirdConditionTrueBranch" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testSecondIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
-  <testcase name="testSingleElementArrays" classname="com.sensordata.SensorDataProcessorTest" time="0.001"/>
+  <testcase name="testMaxConditionSmallData2" classname="com.sensordata.SensorDataProcessorTest" time="0.07"/>
+  <testcase name="testCatchBlockCoverage" classname="com.sensordata.SensorDataProcessorTest" time="0.007"/>
+  <testcase name="testThirdConditionTrueBranch" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
+  <testcase name="testSecondIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
+  <testcase name="testSingleElementArrays" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
   <testcase name="testThirdIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
+  <testcase name="testSecondIfTruePath" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
+  <testcase name="testInnerIfSecondComparisonFalse" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
   <testcase name="testCompleteLoopCoverage" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testZeroDivisor" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
+  <testcase name="testZeroDivisor" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
   <testcase name="testLargeDataSet" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testNegativeValues" classname="com.sensordata.SensorDataProcessorTest" time="0.001"/>
-  <testcase name="testAverageMethod" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
-  <testcase name="testFirstBreakBranch" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
-  <testcase name="testElseCondition" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testFirstIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.007"/>
+  <testcase name="testNegativeValues" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
+  <testcase name="testFirstIfSecondComparisonFalse" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
+  <testcase name="testAverageMethod" classname="com.sensordata.SensorDataProcessorTest" time="0.005"/>
+  <testcase name="testFirstBreakBranch" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
+  <testcase name="testElseCondition" classname="com.sensordata.SensorDataProcessorTest" time="0.01"/>
+  <testcase name="testFirstIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.009"/>
   <testcase name="testFileCreationAndContent" classname="com.sensordata.SensorDataProcessorTest" time="0.009"/>
-  <testcase name="testArithmeticOperations" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testConstructor" classname="com.sensordata.SensorDataProcessorTest" time="0.008"/>
+  <testcase name="testArithmeticOperations" classname="com.sensordata.SensorDataProcessorTest" time="0.006"/>
+  <testcase name="testConstructor" classname="com.sensordata.SensorDataProcessorTest" time="0.012"/>
 </testsuite>

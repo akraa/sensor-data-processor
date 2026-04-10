@@ -416,4 +416,57 @@ public class SensorDataProcessorTest {
         processor = new SensorDataProcessor(data, limits);
         assertDoesNotThrow(() -> processor.calculate(2.0));
     }
+
+    @Test
+    @DisplayName("Test 18: First compound if false via second comparison, no early break")
+    public void testFirstIfSecondComparisonFalse() throws Exception {
+        double[][][] data = new double[1][1][3];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = 200.0;
+        data[0][0][1] = 200.0;
+        data[0][0][2] = 200.0;
+        limits[0][0] = 0.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.matches("\\[D@.+\\t"), "Output should be the default Java array string plus tab");
+    }
+
+    @Test
+    @DisplayName("Test 19: Inner compound if false via second comparison")
+    public void testInnerIfSecondComparisonFalse() throws Exception {
+        double[][][] data = new double[1][1][3];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = 5.0;
+        data[0][0][1] = 100.0;
+        data[0][0][2] = 100.0;
+        limits[0][0] = 15.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.matches("\\[D@.+\\t"), "Output should be the default Java array string plus tab");
+    }
+
+    @Test
+    @DisplayName("Test 20: Second if TRUE path with padding")
+    public void testSecondIfTruePath() throws Exception {
+        double[][][] data = new double[1][1][2];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = 5.0;
+        data[0][0][1] = 6.0;
+        limits[0][0] = 0.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(0.5);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.matches("\\[D@.+\\t"), "Output should be the default Java array string plus tab");
+    }
 }

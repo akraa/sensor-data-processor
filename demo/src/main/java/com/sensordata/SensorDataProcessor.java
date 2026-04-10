@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 public class SensorDataProcessor{
+    private static final boolean LOG_TIMING = false;
 
     // Senson data and limits.
     public double[][][] data;
@@ -40,60 +41,72 @@ public class SensorDataProcessor{
         try (BufferedWriter out = new BufferedWriter(new FileWriter("RacingStatsData.txt"))) {
 
             for (int i = 0; i < rows; i++) {
-                final StringBuilder rowOutput = new StringBuilder(cols * depth * 8);
+                final double[][] dataI = data[i];
+                final double[] limitI = limit[i];
 
                 for (int j = 0; j < cols; j++) {
-                    final double[] sourceRow = data[i][j];
-                    final double limitSq = limit[i][j] * limit[i][j];
+                    final double[] sourceRow = dataI[j];
+                    final double limitValue = limitI[j];
+                    final double limitSq = limitValue * limitValue;
                     final double sourceAverage = average(sourceRow);
-                    final double[] targetRow = new double[depth];
                     final double invDepth = 1.0 / depth;
 
                     double rowSum = 0.0;
+                    int nextIndex = 0;
+
+                    out.write('[');
 
                     for (int k = 0; k < depth; k++) {
                         final double sourceValue = sourceRow[k];
                         final double transformed = sourceValue * invD - limitSq;
-                        targetRow[k] = transformed;
-                        rowSum += transformed;
+                        double outputValue = transformed;
+                        rowSum += outputValue;
 
                         final double transformedAverage = rowSum * invDepth;
+
+                        if (Math.abs(sourceValue) < Math.abs(transformed)
+                                && sourceAverage < transformed) {
+                            outputValue = transformed * 2.0;
+                            rowSum += transformed;
+                        }
+
+                        if (k > 0) {
+                            out.write(", ");
+                        }
+                        out.write(Double.toString(outputValue));
+                        nextIndex = k + 1;
 
                         if (transformedAverage > 10.0 && transformedAverage < 50.0) {
                             break;
                         } else if (transformed > sourceValue) {
                             break;
-                        } else {
-                            if (Math.abs(sourceValue) < Math.abs(transformed)
-                                    && sourceAverage < transformed) {
-                                targetRow[k] = transformed * 2.0;
-                                rowSum += transformed;
-                            }
                         }
                     }
 
-                    rowOutput.append('[');
-                    for (int k = 0; k < depth; k++) {
+                    for (int k = nextIndex; k < depth; k++) {
                         if (k > 0) {
-                            rowOutput.append(',').append(' ');
+                            out.write(", ");
                         }
-                        rowOutput.append(targetRow[k]);
+                        out.write("0.0");
                     }
-                    rowOutput.append(']').append('\t');
+                    out.write("]\t");
                 }
 
-                out.write(rowOutput.toString());
             }
 
-            long endTime = System.nanoTime();
-            long elapsedMs = (endTime - startTime) / 1_000_000;
-            System.out.println("calculate() completed in " + elapsedMs + " ms");
+            if (LOG_TIMING) {
+                long endTime = System.nanoTime();
+                long elapsedMs = (endTime - startTime) / 1_000_000;
+                System.out.println("calculate() completed in " + elapsedMs + " ms");
+            }
 
         } catch (Exception e) {
             System.out.println("Error= " + e);
-            long endTime = System.nanoTime();
-            long elapsedMs = (endTime - startTime) / 1_000_000;
-            System.out.println("calculate() failed after " + elapsedMs + " ms");
+            if (LOG_TIMING) {
+                long endTime = System.nanoTime();
+                long elapsedMs = (endTime - startTime) / 1_000_000;
+                System.out.println("calculate() failed after " + elapsedMs + " ms");
+            }
         }
     }
     

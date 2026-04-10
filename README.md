@@ -1,3 +1,18 @@
+# Project Summary
+
+Earlier code changes focused on making `calculate()` faster without introducing new classes or external files. The main updates were:
+
+- Cached `data`, `limit`, and dimension values to avoid repeated lookups.
+- Replaced repeated division with multiplication by a precomputed reciprocal.
+- Removed repeated `Math.pow` calls in favor of direct multiplication.
+- Switched to try-with-resources for cleaner file handling.
+- Reduced memory pressure by removing the full 3D temporary array.
+- Buffered each row before writing output to reduce file I/O overhead.
+
+These changes kept the existing class structure intact while improving constant factors and reducing unnecessary allocations.
+
+---
+
 # Comparison & Analysis Report
 
 ## Performance & Strategy

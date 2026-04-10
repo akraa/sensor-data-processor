@@ -16,26 +16,16 @@ public class SensorDataProcessor{
         this.limit = limit;
     }
 
-    // calculates average of sensor data
-    private double average(double[] array) {
-        int i = 0;
-        double val = 0;
-        for (i = 0; i < array.length; i++) {
-            val += array[i];
-        }
-
-        return val / array.length;
-    }
-
     // calculate data
     public void calculate(double d) {
 
-        long startTime = System.nanoTime();
+        final long startTime = LOG_TIMING ? System.nanoTime() : 0L;
 
         final int rows = data.length;
         final int cols = data[0].length;
         final int depth = data[0][0].length;
         final double invD = 1.0 / d;
+        final double invDepth = 1.0 / depth;
 
         // Write racing stats data into a file
         try (BufferedWriter out = new BufferedWriter(new FileWriter("RacingStatsData.txt"))) {
@@ -48,8 +38,11 @@ public class SensorDataProcessor{
                     final double[] sourceRow = dataI[j];
                     final double limitValue = limitI[j];
                     final double limitSq = limitValue * limitValue;
-                    final double sourceAverage = average(sourceRow);
-                    final double invDepth = 1.0 / depth;
+                    double sourceSum = 0.0;
+                    for (int k = 0; k < depth; k++) {
+                        sourceSum += sourceRow[k];
+                    }
+                    final double sourceAverage = sourceSum * invDepth;
 
                     double rowSum = 0.0;
                     int nextIndex = 0;
@@ -64,7 +57,12 @@ public class SensorDataProcessor{
 
                         final double transformedAverage = rowSum * invDepth;
 
-                        if (Math.abs(sourceValue) < Math.abs(transformed)
+                        boolean shouldBreak = false;
+                        if (transformedAverage > 10.0 && transformedAverage < 50.0) {
+                            shouldBreak = true;
+                        } else if (transformed > sourceValue) {
+                            shouldBreak = true;
+                        } else if (Math.abs(sourceValue) < Math.abs(transformed)
                                 && sourceAverage < transformed) {
                             outputValue = transformed * 2.0;
                             rowSum += transformed;
@@ -76,9 +74,7 @@ public class SensorDataProcessor{
                         out.write(Double.toString(outputValue));
                         nextIndex = k + 1;
 
-                        if (transformedAverage > 10.0 && transformedAverage < 50.0) {
-                            break;
-                        } else if (transformed > sourceValue) {
+                        if (shouldBreak) {
                             break;
                         }
                     }

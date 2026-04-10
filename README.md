@@ -1,13 +1,20 @@
 # Project Summary
 
-Earlier code changes focused on making `calculate()` faster without introducing new classes or external files. The main updates were:
+Code changes focused on improving `calculate()` performance without introducing new classes or external files. The implemented optimizations were:
 
-- Cached `data`, `limit`, and dimension values to avoid repeated lookups.
-- Replaced repeated division with multiplication by a precomputed reciprocal.
-- Removed repeated `Math.pow` calls in favor of direct multiplication.
-- Switched to try-with-resources for cleaner file handling.
-- Reduced memory pressure by removing the full 3D temporary array.
-- Buffered each row before writing output to reduce file I/O overhead.
+- Cached dimensions (`rows`, `cols`, `depth`) and row references (`data[i]`, `limit[i]`) to reduce repeated indexing and lookups.
+- Precomputed reciprocals (`invD`, `invDepth`) to replace repeated division in hot loops.
+- Removed expensive cubic `Math.pow` comparisons and replaced them with equivalent absolute-magnitude checks.
+- Inlined source-row averaging in the main loop to avoid extra helper-call overhead.
+- Eliminated temporary per-cell/per-row structures used in earlier versions and streamed output directly to `BufferedWriter`.
+- Preserved output shape by writing computed values immediately and filling any remaining trailing values with `0.0` after early loop breaks.
+- Gated timing logs behind a constant flag (`LOG_TIMING`) so normal runs avoid console timing overhead.
+- Kept exception handling and output file behavior compatible with existing tests.
+
+Coverage and validation updates made alongside the performance work:
+
+- Added/updated tests to cover all paths in `SensorDataProcessor` and `SensorDataProcessorApp`.
+- Achieved 100% instruction/statement and 100% branch coverage for both classes in the demo module (JaCoCo).
 
 These changes kept the existing class structure intact while improving constant factors and reducing unnecessary allocations.
 

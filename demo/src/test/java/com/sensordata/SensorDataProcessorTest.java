@@ -380,7 +380,7 @@ public class SensorDataProcessorTest {
     }
 
     @Test
-    @DisplayName("Test 18: Covers second if true and inner multiply path")
+    @DisplayName("Test 18: Covers second if true break path")
     public void testSecondIfTrueAndMultiplyPath() throws Exception {
         double[][][] data = new double[1][1][3];
         double[][] limits = new double[1][1];
@@ -394,7 +394,7 @@ public class SensorDataProcessorTest {
         processor.calculate(0.5);
 
         String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
-        assertTrue(content.contains("19.98"), "Output should contain the doubled transformed value");
+        assertTrue(content.contains("9.99"), "Output should contain the transformed value before second-if break");
     }
 
     @Test

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sensordata.SensorDataProcessorTest" time="0.168" tests="19" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.sensordata.SensorDataProcessorAppTest" time="1.117" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -52,23 +52,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testMaxConditionSmallData2" classname="com.sensordata.SensorDataProcessorTest" time="0.074"/>
-  <testcase name="testSecondIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testFirstIfSecondConditionFalse" classname="com.sensordata.SensorDataProcessorTest" time="0.007"/>
-  <testcase name="testSingleElementArrays" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testThirdIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testCompleteLoopCoverage" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
-  <testcase name="testZeroDivisor" classname="com.sensordata.SensorDataProcessorTest" time="0.006"/>
-  <testcase name="testLargeDataSet" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testCalculateCatchBlock" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testNegativeValues" classname="com.sensordata.SensorDataProcessorTest" time="0"/>
-  <testcase name="testAverageMethod" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testFirstBreakBranch" classname="com.sensordata.SensorDataProcessorTest" time="0.004"/>
-  <testcase name="testElseCondition" classname="com.sensordata.SensorDataProcessorTest" time="0.002"/>
-  <testcase name="testFirstIfConditionTrue" classname="com.sensordata.SensorDataProcessorTest" time="0.001"/>
-  <testcase name="testFileCreationAndContent" classname="com.sensordata.SensorDataProcessorTest" time="0.003"/>
-  <testcase name="testSecondIfTrueAndMultiplyPath" classname="com.sensordata.SensorDataProcessorTest" time="0.006"/>
-  <testcase name="testArithmeticOperations" classname="com.sensordata.SensorDataProcessorTest" time="0"/>
-  <testcase name="testConstructor" classname="com.sensordata.SensorDataProcessorTest" time="0.007"/>
-  <testcase name="testSecondIfFalseAndInnerFalse" classname="com.sensordata.SensorDataProcessorTest" time="0.005"/>
+  <testcase name="testMainCoverage" classname="com.sensordata.SensorDataProcessorAppTest" time="1.107"/>
+  <testcase name="testConstructorCoverage" classname="com.sensordata.SensorDataProcessorAppTest" time="0.003"/>
 </testsuite>

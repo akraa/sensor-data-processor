@@ -84,10 +84,7 @@ public class SensorDataProcessor{
                     }
 
                     for (int k = nextIndex; k < depth; k++) {
-                        if (k > 0) {
-                            out.write(", ");
-                        }
-                        out.write("0.0");
+                        out.write(", 0.0");
                     }
                     out.write("]\t");
                 }

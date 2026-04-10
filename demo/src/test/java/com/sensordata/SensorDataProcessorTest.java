@@ -362,4 +362,55 @@ public class SensorDataProcessorTest {
         processor = new SensorDataProcessor(data, limits);
         assertDoesNotThrow(() -> processor.calculate(1.0));
     }
+
+    @Test
+    @DisplayName("Test 17: Covers first if true with second condition false")
+    public void testFirstIfSecondConditionFalse() throws Exception {
+        double[][][] data = new double[1][1][1];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = 100.0;
+        limits[0][0] = 0.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.contains("100.0"), "Output should contain the unmodified transformed value");
+    }
+
+    @Test
+    @DisplayName("Test 18: Covers second if true and inner multiply path")
+    public void testSecondIfTrueAndMultiplyPath() throws Exception {
+        double[][][] data = new double[1][1][3];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = 5.0;
+        data[0][0][1] = 6.0;
+        data[0][0][2] = 7.0;
+        limits[0][0] = 0.1;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(0.5);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.contains("19.98"), "Output should contain the doubled transformed value");
+    }
+
+    @Test
+    @DisplayName("Test 19: Covers second if false and inner false path")
+    public void testSecondIfFalseAndInnerFalse() throws Exception {
+        double[][][] data = new double[1][1][2];
+        double[][] limits = new double[1][1];
+
+        data[0][0][0] = -1.0;
+        data[0][0][1] = -1.0;
+        limits[0][0] = 1.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
+
+        String content = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+        assertTrue(content.contains("-2.0"), "Output should contain the transformed value when no branch breaks early");
+    }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -22,6 +23,14 @@ public class SensorDataProcessorTest {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    @Test
+    @DisplayName("Test 0: App constructor and main are covered")
+    public void testAppMainCoverage() {
+        SensorDataProcessorApp app = new SensorDataProcessorApp();
+        assertNotNull(app);
+        assertDoesNotThrow(() -> SensorDataProcessorApp.main(new String[0]));
     }
 
     @Test
@@ -375,6 +384,64 @@ public class SensorDataProcessorTest {
         // This tests all arithmetic operations in the complex condition
         processor = new SensorDataProcessor(data, limits);
         processor.calculate(12.0);
+
+        File file = new File(OUTPUT_FILE);
+        assertTrue(file.exists(), "Output file should be created");
+    }
+
+    @Test
+    @DisplayName("Test 16: Force catch path by blocking output file creation")
+    public void testCatchPathWhenOutputPathIsDirectory() throws IOException {
+        File path = new File(OUTPUT_FILE);
+        if (path.exists()) {
+            path.delete();
+        }
+
+        assertTrue(path.mkdir(), "Should create directory to block FileWriter");
+
+        double[][][] data = new double[1][1][1];
+        double[][] limits = new double[1][1];
+        data[0][0][0] = 1.0;
+        limits[0][0] = 1.0;
+        processor = new SensorDataProcessor(data, limits);
+
+        assertDoesNotThrow(() -> processor.calculate(1.0));
+
+        assertTrue(path.isDirectory(), "Output path should still be a directory");
+        assertTrue(path.delete(), "Cleanup should remove temporary directory");
+    }
+
+    @Test
+    @DisplayName("Test 17: Cover first-condition short-circuit path")
+    public void testFirstConditionShortCircuitFalse() {
+        double[][][] data = new double[1][1][2];
+        double[][] limits = new double[1][1];
+
+        // Keep average <= 10 so (avgData2 > 10) is false and right side is short-circuited.
+        data[0][0][0] = 2.0;
+        data[0][0][1] = 2.0;
+        limits[0][0] = 1.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(2.0);
+
+        File file = new File(OUTPUT_FILE);
+        assertTrue(file.exists(), "Output file should be created");
+    }
+
+    @Test
+    @DisplayName("Test 18: Cover multiply-by-2 true branch")
+    public void testMultiplyByTwoBranchTrue() {
+        double[][][] data = new double[1][1][2];
+        double[][] limits = new double[1][1];
+
+        // Designed so both earlier break conditions are false and the third condition becomes true at k=1.
+        data[0][0][0] = -50.0;
+        data[0][0][1] = -10.0;
+        limits[0][0] = 1.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
 
         File file = new File(OUTPUT_FILE);
         assertTrue(file.exists(), "Output file should be created");

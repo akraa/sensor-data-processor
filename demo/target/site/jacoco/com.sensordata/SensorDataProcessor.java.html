@@ -67,8 +67,8 @@ public class SensorDataProcessor{
 <span class="fc" id="L67">                            double absData2Cube = absData2 * absData2 * absData2;</span>
 
                             // Removed always-true index check: (i + 1) * (j + 1) &gt; 0.
-<span class="pc bpc" id="L70" title="1 of 4 branches missed.">                            if (absDataCube &lt; absData2Cube &amp;&amp; avgData &lt; data2[i][j][k])</span>
-<span class="nc" id="L71">                            data2[i][j][k] *= 2;</span>
+<span class="fc bfc" id="L70" title="All 4 branches covered.">                            if (absDataCube &lt; absData2Cube &amp;&amp; avgData &lt; data2[i][j][k])</span>
+<span class="fc" id="L71">                            data2[i][j][k] *= 2;</span>
                             else
                                 continue;
                         }
@@ -88,11 +88,11 @@ public class SensorDataProcessor{
 <span class="fc" id="L88">            long elapsedMs = (endTime - startTime) / 1_000_000;</span>
 <span class="fc" id="L89">            System.out.println(&quot;calculate() completed in &quot; + elapsedMs + &quot; ms&quot;);</span>
 
-<span class="nc" id="L91">        } catch (Exception e) {</span>
-<span class="nc" id="L92">            System.out.println(&quot;Error= &quot; + e);</span>
-<span class="nc" id="L93">            long endTime = System.nanoTime();</span>
-<span class="nc" id="L94">            long elapsedMs = (endTime - startTime) / 1_000_000;</span>
-<span class="nc" id="L95">            System.out.println(&quot;calculate() failed after &quot; + elapsedMs + &quot; ms&quot;);</span>
+<span class="fc" id="L91">        } catch (Exception e) {</span>
+<span class="fc" id="L92">            System.out.println(&quot;Error= &quot; + e);</span>
+<span class="fc" id="L93">            long endTime = System.nanoTime();</span>
+<span class="fc" id="L94">            long elapsedMs = (endTime - startTime) / 1_000_000;</span>
+<span class="fc" id="L95">            System.out.println(&quot;calculate() failed after &quot; + elapsedMs + &quot; ms&quot;);</span>
 <span class="fc" id="L96">        }</span>
 <span class="fc" id="L97">    }</span>
     

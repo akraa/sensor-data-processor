@@ -379,4 +379,41 @@ public class SensorDataProcessorTest {
         File file = new File(OUTPUT_FILE);
         assertTrue(file.exists(), "Output file should be created");
     }
+
+    @Test
+    @DisplayName("Test 16: Third condition TRUE executes data2 *= 2 branch")
+    public void testThirdConditionTrueBranch() {
+        double[][][] data = new double[1][1][3];
+        double[][] limits = new double[1][1];
+
+        // For k=0:
+        // first if FALSE: average(data2 row) is negative (not in 10..50)
+        // second if FALSE: data2 <= data for negative values
+        // third if TRUE: |data|^3 < |data2|^3 and average(data row) < data2
+        data[0][0][0] = -5.0;
+        data[0][0][1] = -200.0;
+        data[0][0][2] = -200.0;
+        limits[0][0] = 0.1;
+
+        processor = new SensorDataProcessor(data, limits);
+        processor.calculate(1.0);
+
+        File file = new File(OUTPUT_FILE);
+        assertTrue(file.exists(), "Output file should be created");
+    }
+
+    @Test
+    @DisplayName("Test 17: Exception path coverage for catch block")
+    public void testCatchBlockCoverage() {
+        File outputPath = new File(OUTPUT_FILE);
+        assertTrue(outputPath.mkdir(), "Directory setup should succeed");
+
+        double[][][] data = new double[1][1][1];
+        double[][] limits = new double[1][1];
+        data[0][0][0] = 10.0;
+        limits[0][0] = 1.0;
+
+        processor = new SensorDataProcessor(data, limits);
+        assertDoesNotThrow(() -> processor.calculate(2.0));
+    }
 }
